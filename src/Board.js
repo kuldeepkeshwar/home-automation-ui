@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Switch from "./Switch";
+import { setPin } from "./api";
 import Table from "@material-ui/core/Table";
 import { withStyles } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
@@ -20,13 +21,11 @@ const PaperSheet = withStyles(paperStyles)(Paper);
 export default function Board(props) {
   const [board, setBoardState] = useState(props.data);
   function togglePin(index) {
-    const status = board.status.map((s, i) => {
-      if (i === index) {
-        return !s;
-      }
-      return s;
+    const status = [...board.status];
+    status[index] = !status[index];
+    setPin(board.id, board.pins[index], status[index]).then(() => {
+      setBoardState({ ...board, status });
     });
-    setBoardState({ ...board, status });
   }
   return (
     <div style={{ margin: "20px" }}>
